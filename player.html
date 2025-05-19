@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mathew Moslow | Author</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet" />
+  
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+  
+  <style>
+    :root {
+      --crimson: #a00032;
+      --beige: #f8f2e7;
+      --text-dark: #1c1c1c;
+      --dark-gray: #333;
+      --medium-gray: #666;
+      --light-gray: #eee;
+      --globalScrub: 1.2; /* Global slowdown for animations */
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Crimson Text', serif;
+      background-color: var(--beige);
+      color: var(--text-dark);
+      overflow-x: hidden;
+      width: 100%;
+      line-height: 1.6;
+    }
+    
+    /* Full-width sections */
+    .full-width-section {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0;
+    }
+    
+    /* Hero Section CSS */
+    .hero {
+      min-height: 100vh;
+      width: 100vw;
+      background: url('https://studyhubmatt.neocities.org/Dev/author/images/header.jpg') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .hero h1 {
+      font-size: clamp(3rem, 6vw, 8rem);
+      color: #fff;
+      text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
+      font-family: 'Playfair Display', serif;
+      text-align: center;
+    }
+    
+    /* Header styles */
+    header {
+      text-align: center;
+      padding: 2rem;
+      background-color: var(--beige);
+      width: 100%;
+    }
+    
+    h1, h2, h3 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 1rem;
+    }
+    
+    h1 {
+      font-size: clamp(2rem, 3vw, 3.5rem);
+      color: var(--crimson);
+    }
+    
+    h2 {
+      font-size: clamp(1.8rem, 2.5vw, 3rem);
+      margin-bottom: 1.5rem;
+    }
+    
+    h3 {
+      font-size: clamp(1.4rem, 2vw, 2.5rem);
+      margin-bottom: 1rem;
+    }
+    
+    /* Content sections */
+    section {
+      padding: 0;
+    }
+    
+    .content-section {
+      width: 100%;
+    }
+    
+    /* Novel + Media Combined Section */
+    .novel-media-section {
+      display: flex;
+      flex-direction: column;
+      width: 100vw;
+      margin: 0;
+      overflow: hidden;
+    }
+    
+    .novel-media-container {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+    
+    /* Media column styling */
+    .media-column {
+      background-color: #222;
+      color: white;
+      padding: 0;
+      width: 100%;
+    }
+    
+    .media-header {
+      padding: 2rem;
+    }
+    
+    .media-description {
+      margin-bottom: 2rem;
+      font-size: 1rem;
+      color: var(--light-gray);
+      max-width: 600px;
+    }
+    
+    /* Media Player UI - Designed to match the screenshots */
+    .media-player-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .media-player-ui {
+      display: flex;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #333;
+      gap: 1rem;
+    }
+    
+    .play-btn {
+      background: var(--crimson);
+      color: white;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    
+    .track-info-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .track-title {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: white;
+      font-size: 0.9rem;
+    }
+    
+    .progress-container {
+      position: relative;
+      width: 100%;
+    }
+    
+    .track-progress {
+      width: 100%;
+      height: 4px;
+      background-color: #444;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 0.25rem;
+      appearance: none;
+      -webkit-appearance: none;
+      border: none;
+    }
+    
+    .track-progress::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--crimson);
+      cursor: pointer;
+      border: none;
+    }
+    
+    .track-progress::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--crimson);
+      cursor: pointer;
+      border: none;
+    }
+    
+    .track-time {
+      font-size: 0.7rem;
+      color: #aaa;
+      text-align: right;
+    }
+    
+    /* Novel column styling */
+    .novel-column {
+      background-color: var(--beige);
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .novel-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .novel-content img {
+      width: 100%;
+      max-width: 300px;
+      display: block;
+      margin: 0 auto 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .blurb {
+      margin-bottom: 2rem;
+      font-size: clamp(1rem, 1.2vw, 1.2rem);
+    }
+    
+    .button {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      background-color: var(--crimson);
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      font-size: clamp(0.9rem, 1vw, 1.1rem);
+    }
+    
+    .button:hover {
+      background-color: #800028;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    /* Second Novel Section */
+    .second-novel-section {
+      padding: 4rem 2rem;
+      background-color: var(--beige);
+    }
+    
+    .novel {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .novel img {
+      width: 100%;
+      max-width: 300px;
+      display: block;
+      margin: 0 auto 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    /* About section */
+    .about-section {
+      padding: 4rem 2rem;
+      background-color: var(--beige);
+    }
+    
+    .about-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .about-content p {
+      margin-bottom: 1.5rem;
+      font-size: clamp(1rem, 1.2vw, 1.2rem);
+    }
+    
+    /* Footer */
+    footer {
+      padding: 3rem 2rem;
+      background-color: var(--crimson);
+      color: white;
+      text-align: center;
+      width: 100vw;
+    }
+    
+    footer .container {
+      max-width: 1200px;
+      padding: 0 2rem;
+    }
+    
+    /* Responsive adjustments */
+    @media (min-width: 992px) {
+      .novel-media-container {
+        flex-direction: row;
+        min-height: 100vh;
+      }
+      
+      .media-column {
+        flex: 0 0 40%;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .media-header {
+        padding: 3rem 2rem 2rem;
+      }
+      
+      .media-player-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+      
+      .novel-column {
+        flex: 0 0 60%;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .novel-content {
+        padding: 4rem;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 3rem;
+      }
+      
+      .novel-content img {
+        flex: 0 0 300px;
+        margin: 0;
+        align-self: flex-start;
+      }
+      
+      .novel-text {
+        flex: 1;
+      }
+      
+      .novel {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 3rem;
+      }
+      
+      .novel img {
+        flex: 0 0 300px;
+        margin: 0;
+      }
+      
+      .novel-info {
+        flex: 1;
+      }
+    }
+    
+    @media (min-width: 768px) and (max-width: 991px) {
+      .novel-content {
+        max-width: 700px;
+        margin: 0 auto;
+      }
+      
+      .novel {
+        flex-direction: row;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 2rem;
+      }
+      
+      .novel img {
+        flex: 0 0 250px;
+        margin: 0;
+      }
+      
+      .novel-info {
+        flex: 1;
+        min-width: 300px;
+      }
+    }
+    
+    @media (max-width: 767px) {
+      .novel-content {
+        text-align: center;
+      }
+      
+      .novel-column {
+        padding: 3rem 1.5rem;
+      }
+      
+      .media-column {
+        padding: 0;
+      }
+      
+      .media-header {
+        padding: 2rem 1.5rem 1rem;
+      }
+      
+      .novel {
+        text-align: center;
+      }
+      
+      .novel-info {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Section with name zoom effect - Full width -->
+  <section class="hero full-width-section" id="heroSection">
+    <h1 id="heroTitle">Mathew Moslow</h1>
+  </section>
+
+  <!-- Novel Section with integrated media player - Full width -->
+  <section class="full-width-section" id="novel-media-section">
+    <div class="split-container">
+      <!-- Media Player Column - Left Side -->
+      <div class="media-side">
+        <div class="media-content">
+          <div class="album-art">
+            <img src="https://studyhubmatt.neocities.org/mathewmoslow/media/player/cover.jpg" alt="Album Cover">
+          </div>
+          
+          <div class="track-list">
+            <h3>Media Library</h3>
+            <p class="media-description">
+              These tracks were written and produced during the writing of A Novel Divorce. With the help of AI and some very patient friends in music production, I was able to not only transform them into actual tracks but sing parts in them myself. Each song captures an emotional moment from my journey.
+            </p>
+            
+            <div class="tracks">
+              <div class="track-item" data-track="1" data-file="feelslikegoodbye.mp3">
+                <div class="track-number">1</div>
+                <div class="track-info">
+                  <div class="track-title">Feels Like Goodbye</div>
+                </div>
+                <div class="track-duration">3:45</div>
+              </div>
+              
+              <div class="track-item" data-track="2" data-file="feelslikegoodbyeslow.mp3">
+                <div class="track-number">2</div>
+                <div class="track-info">
+                  <div class="track-title">Feels Like Goodbye (Slow)</div>
+                </div>
+                <div class="track-duration">4:27</div>
+              </div>
+              
+              <div class="track-item" data-track="3" data-file="abscence.mp3">
+                <div class="track-number">3</div>
+                <div class="track-info">
+                  <div class="track-title">Absence</div>
+                </div>
+                <div class="track-duration">3:52</div>
+              </div>
+              
+              <div class="track-item" data-track="4" data-file="absencelinger.mp3">
+                <div class="track-number">4</div>
+                <div class="track-info">
+                  <div class="track-title">Absence (Linger)</div>
+                </div>
+                <div class="track-duration">4:10</div>
+              </div>
+              
+              <div class="track-item" data-track="5" data-file="lifelinehomage.mp3">
+                <div class="track-number">5</div>
+                <div class="track-info">
+                  <div class="track-title">LifeLine Homage</div>
+                </div>
+                <div class="track-duration">3:23</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="player-controls">
+            <div class="now-playing">
+              <span id="nowPlayingTitle">Select a track to play</span>
+            </div>
+            <div class="progress-container">
+              <input type="range" id="audioSeek" class="track-progress" min="0" max="100" value="0">
+              <div class="track-time" id="audioTimeInfo">00:00 / 00:00</div>
+            </div>
+            <div class="control-buttons">
+              <button id="prevBtn" class="control-btn prev-btn">⏮</button>
+              <button id="playPauseBtn" class="control-btn play-btn">▶</button>
+              <button id="nextBtn" class="control-btn next-btn">⏭</button>
+            </div>
+          </div>
+          
+          <audio id="audioPlayer">
+            <source src="" type="audio/mpeg" id="audioSource">
+          </audio>
+        </div>
+      </div>
+      
+      <!-- Novel Content Column - Right Side -->
+      <div class="book-side">
+        <div class="book-content">
+          <div class="book-image">
+            <img src="https://studyhubmatt.neocities.org/mathewmoslow/Cover8.jpg" alt="A Novel Divorce Cover">
+          </div>
+          <div class="book-text">
+            <h2>A Novel Divorce</h2>
+            <p class="blurb">
+              Beneath the heartbreak and hard-earned truths is a world of swirling rumors—whispers of drug-fueled binges, orgiastic escapades, and a relentless parade of men who blurred the lines between distraction and destruction. No one has ever heard the one about being the pass-around pretty boy in Jamaican prison. Some swear he flirted with darker impulses—maybe even murder, maybe twice? The real story? Buried somewhere in Moslow's no-holds-barred confessions, where secrets and half-truths collide in a storm of scandal and self-reckoning.
+            </p>
+            <a href="#" class="button">Buy Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Second Novel Section - Full width with content container -->
+  <section class="second-novel-section full-width-section">
+    <div class="novel">
+      <img src="https://studyhubmatt.neocities.org/mathewmoslow/ayad.png" alt="A Year and a Day Cover" />
+      <div class="novel-info">
+        <h2>A Year and a Day</h2>
+        <h3 style="font-style: italic; color: var(--crimson);">Beyond the Reach of Justice</h3>
+        <p class="blurb">
+          "There are two places where justice cannot follow: beyond the grave and beyond the horizon. I found a third: the space between law and morality."
+        </p>
+        <p class="blurb">
+          In the lush coastal beauty of Jamaica, where colonial history casts long shadows over modern lives, nurse Jonathan Blake harbors a wound that refuses to heal. When his mother dies of an overdose after a bitter divorce, Jonathan blames his father and sets into motion a plan that manipulates colonial-era legal loopholes to exact revenge—before the clock runs out.
+        </p>
+        <a href="#" class="button">Sign up to get notified</a>
+        <p style="margin-top: 0.8rem; font-style: italic;">And for an exclusive sneak peek!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section - Full width with content container -->
+  <section class="about-section full-width-section">
+    <div class="about-content">
+      <h2>About Mathew Moslow</h2>
+      <p>
+        Mathew Moslow is a writer, researcher, and nursing student who somehow managed to pen A Novel Divorce amidst the demands of university coursework, clinical rotations, and a relentless drive to uncover answers. With a sharp wit and fearless vulnerability, Moslow offers readers an unfiltered glimpse into his most transformative experiences.
+      </p>
+      <p>
+        Shaped by his formative years in Jamaica and guided by his role models along the way, Moslow brings a deep curiosity to his storytelling. Whether dissecting the generational patterns that shaped him or confronting the truths unearthed by his divorce, his writing merges raw emotion with piercing insight, creating a narrative that resonates deeply with readers.
+      </p>
+      <p>
+        When he's not writing, Moslow can often be found studying or researching, cooking, or finding cozy corners to recharge. A self-proclaimed dog person and a confessed homebody, he enjoys quiet moments and the occasional night out—if you invite him.
+      </p>
+      <p>
+        Moslow doesn't just share his story; he invites readers to see themselves within it. He believes self-discovery is one of life's most rewarding journeys and encourages readers to explore tools like the Enneagram to deepen their understanding. Writing A Novel Divorce was as much about processing his own life as it was about connecting with others—and it all began as a response to an event that no one even knew had occurred.
+      </p>
+      <p>
+        Unapologetically human, Moslow admits, "I'm selfish, judgmental, and it's hard to do better. But I try." This unflinching honesty, paired with his drive to make sense of life's challenges, makes A Novel Divorce both a deeply personal account and an invitation for readers to embark on their own paths to clarity and growth.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer - Full width -->
+  <footer class="full-width-section">
+    <div class="container">
+      <p>&copy; Mathew Moslow. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- GSAP Animation Script -->
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+    const globalScrub = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--globalScrub')) || 1;
+
+    // Hero Title Zoom Out Animation
+    gsap.to("#heroTitle", {
+      scale: 5,
+      opacity: 0,
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: globalScrub
+      }
+    });
+    
+    // Audio Player Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const audioPlayer = document.getElementById('audioPlayer');
+      const audioSource = document.getElementById('audioSource');
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const seekBar = document.getElementById('audioSeek');
+      const timeInfo = document.getElementById('audioTimeInfo');
+      const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+      
+      let currentTrack = 0;
+      const tracks = document.querySelectorAll('.track-item');
+      
+      // Format time in MM:SS
+      function formatTime(seconds) {
+        if (!seconds || !isFinite(seconds)) return "00:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      }
+      
+      // Load track function
+      function loadTrack(trackIndex) {
+        if (trackIndex < 0) trackIndex = tracks.length - 1;
+        if (trackIndex >= tracks.length) trackIndex = 0;
+        
+        currentTrack = trackIndex;
+        
+        const trackElement = tracks[trackIndex];
+        const trackFile = trackElement.getAttribute('data-file');
+        const trackTitle = trackElement.querySelector('.track-title').textContent;
+        
+        // Update track UI
+        tracks.forEach(track => track.classList.remove('active'));
+        trackElement.classList.add('active');
+        
+        // Update audio source
+        audioSource.src = `https://studyhubmatt.neocities.org/mathewmoslow/media/${trackFile}`;
+        audioPlayer.load();
+        
+        // Update title display
+        nowPlayingTitle.textContent = trackTitle;
+        
+        // Reset controls
+        seekBar.value = 0;
+        timeInfo.textContent = "00:00 / 00:00";
+        
+        // Auto play if was playing
+        if (playPauseBtn.textContent === "⏸") {
+          audioPlayer.play();
+        }
+      }
+      
+      // Play/Pause functionality
+      playPauseBtn.addEventListener('click', () => {
+        // If no track selected, load the first one
+        if (currentTrack === 0 && !tracks[0].classList.contains('active')) {
+          loadTrack(0);
+        }
+        
+        if (audioPlayer.paused) {
+          audioPlayer.play();
+          playPauseBtn.textContent = "⏸";
+        } else {
+          audioPlayer.pause();
+          playPauseBtn.textContent = "▶";
+        }
+      });
+      
+      // Previous track
+      prevBtn.addEventListener('click', () => {
+        loadTrack(currentTrack - 1);
+      });
+      
+      // Next track
+      nextBtn.addEventListener('click', () => {
+        loadTrack(currentTrack + 1);
+      });
+      
+      // Update progress bar as audio plays
+      audioPlayer.addEventListener('timeupdate', () => {
+        const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100 || 0;
+        seekBar.value = percent;
+        timeInfo.textContent = `${formatTime(audioPlayer.currentTime)} / ${formatTime(audioPlayer.duration)}`;
+      });
+      
+      // Allow seeking
+      seekBar.addEventListener('input', () => {
+        const seekTime = (seekBar.value / 100) * audioPlayer.duration;
+        audioPlayer.currentTime = seekTime;
+      });
+      
+      // Track ended - auto play next
+      audioPlayer.addEventListener('ended', () => {
+        loadTrack(currentTrack + 1);
+        audioPlayer.play();
+      });
+      
+      // Click on track list items
+      tracks.forEach((track, index) => {
+        track.addEventListener('click', () => {
+          loadTrack(index);
+          audioPlayer.play();
+          playPauseBtn.textContent = "⏸";
+        });
+      });
+    });
+  </script>
+</body>
+</html>
